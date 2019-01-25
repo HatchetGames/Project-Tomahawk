@@ -14,25 +14,25 @@ public class MenuController : MonoBehaviour {
 
     public void OnClickStartQuickMatch()
     {
-        Destroy(localPlayer);
+        //Destroy(localPlayer);
         SceneManager.LoadScene("WaitingRoom");
     }
 
     public void OnClickStartSurvival()
     {
-        Destroy(localPlayer);
+        //Destroy(localPlayer);
         SceneManager.LoadScene("WaitingRoomSurvival");
     }
 
     public void OnClickOpenShop()
     {
-        Destroy(localPlayer);
+        //Destroy(localPlayer);
         SceneManager.LoadScene("Shop");
     }
 
     public void OnClickOpenSettings()
     {
-        Destroy(localPlayer);
+        //Destroy(localPlayer);
         SceneManager.LoadScene("Settings");
     }
 }

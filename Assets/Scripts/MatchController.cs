@@ -24,7 +24,7 @@ public class MatchController : MonoBehaviourPunCallbacks {
 
     private void Start()
     {
-        localPlayer = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity).GetComponent<PlayerMovement>();
+        //localPlayer = PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity).GetComponent<PlayerMovement>();
         //if(PhotonNetwork.IsMasterClient)
 
         //PlayerMovement.RefreshInstance(ref localPlayer, PlayerPrefab);

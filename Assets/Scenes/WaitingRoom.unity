@@ -409,7 +409,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 229683089}
-  - component: {fileID: 229683088}
   - component: {fileID: 229683090}
   m_Layer: 0
   m_Name: photonScript
@@ -418,21 +417,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &229683088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 229683087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6e8b248646e1249a9f1394a8d2cebb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sectionView1: {fileID: 1422729249}
-  sectionView2: {fileID: 693469498}
-  sectionView3: {fileID: 918374257}
-  gameVersion: 
 --- !u!4 &229683089
 Transform:
   m_ObjectHideFlags: 0
@@ -907,6 +891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f63cbb25763424ba991e149fb9a085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 114485836841015902, guid: 7472f80ed4957e74faab8a8dd6c1238b, type: 2}
   photonB: {fileID: 229683090}
 --- !u!4 &667405379
 Transform:
@@ -915,7 +900,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 667405377}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5290816, y: -2.775354, z: 5.0771346}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

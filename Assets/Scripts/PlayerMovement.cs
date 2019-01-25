@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviourPun, IPunObservable {
             PhotonNetwork.Destroy(player.gameObject);
         }
 
-        player = PhotonNetwork.Instantiate(prefab.gameObject.name, position, rotation).GetComponent<PlayerMovement>();
+        player = PhotonNetwork.Instantiate(prefab.gameObject.name, position, rotation, 0).GetComponent<PlayerMovement>();
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

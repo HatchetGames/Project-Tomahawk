@@ -3,15 +3,31 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PhotonHandler : MonoBehaviourPunCallbacks
 {
-
+    public static PhotonHandler pHandler;
+    public PlayerMovement player;
     public PhotonButtons photonB;
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.transform);
+        if (PhotonHandler.pHandler == null)
+            PhotonHandler.pHandler = this;
+        else if(PhotonHandler.pHandler != this)
+            Destroy(this.gameObject);
+
+        DontDestroyOnLoad(this.gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Match")
+        {
+            SpawnPlayer();
+        }
     }
 
     public void OnClickCreateRoom()
@@ -33,6 +49,7 @@ public class PhotonHandler : MonoBehaviourPunCallbacks
 
     public void MoveScene()
     {
+        photonB = null;
         PhotonNetwork.LoadLevel("Match");
     }
 
@@ -40,5 +57,10 @@ public class PhotonHandler : MonoBehaviourPunCallbacks
     {
         MoveScene();
         Debug.Log("We are connected to the room!");
+    }
+
+    private void SpawnPlayer()
+    {
+        PhotonNetwork.Instantiate(player.name, player.transform.position, player.transform.rotation, 0);
     }
 }

@@ -1,0 +1,123 @@
+﻿using Photon.Pun;
+using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
+
+public class PhotonLobby : MonoBehaviourPunCallbacks {
+
+    public static PhotonLobby lobby;
+    public PlayerMovement localPlayer;
+    public GameObject quickMatchButton;
+    public GameObject cancelMatchButton;
+    //public GameObject sectionView1, sectionView2, sectionView3;
+
+    private void Awake()
+    {
+        lobby = this;
+    }
+
+    private void Start()
+    {
+        PhotonNetwork.ConnectUsingSettings();
+        Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        //PhotonNetwork.JoinLobby(TypedLobby.Default);
+        Debug.Log("We are connected to master");
+        PhotonNetwork.AutomaticallySyncScene = true;
+        quickMatchButton.SetActive(true);
+    }
+
+    private void CreateRoom()
+    {
+        int randomRoomName = Random.Range(0, 10000);
+        RoomOptions roomOptions = new RoomOptions()
+        {
+            IsVisible = true,
+            IsOpen = true,
+            MaxPlayers = (byte)MultiplayerSettings.settings.maxPlayers
+        };
+        //PhotonNetwork.CreateRoom("Room" + randomRoomName, roomOptions);
+        PhotonNetwork.CreateRoom("test", roomOptions);
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        Debug.Log("Tried to create a new room but failed, there must already be a room with the same name");
+        CreateRoom();
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        //base.OnJoinRandomFailed(returnCode, message);
+        Debug.Log("Failed to join a random game. There must be no open games");
+        // Make new room
+        CreateRoom();
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        Debug.Log("Failed to join game. The game must not have been created");
+
+        CreateRoom();
+    }
+
+    public void OnQuickMatchButtonClicked()
+    {
+        quickMatchButton.SetActive(false);
+        cancelMatchButton.SetActive(true);
+        //PhotonNetwork.JoinRandomRoom();
+        PhotonNetwork.JoinRoom("test");
+    }
+
+    public void OnCancelMatchButtonClicked()
+    {
+        cancelMatchButton.SetActive(false);
+        quickMatchButton.SetActive(true);
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public void OnClickStartSurvival()
+    {
+        //Destroy(localPlayer);
+        SceneManager.LoadScene("WaitingRoomSurvival");
+    }
+
+    public void OnClickOpenShop()
+    {
+        //Destroy(localPlayer);
+        SceneManager.LoadScene("Shop");
+    }
+
+    public void OnClickOpenSettings()
+    {
+        //Destroy(localPlayer);
+        SceneManager.LoadScene("Settings");
+    }
+
+    //public override void OnJoinedLobby()
+    //{
+    //    sectionView1.SetActive(false);
+    //    sectionView2.SetActive(true);
+    //    Debug.Log("On Joined Lobby");
+    //}
+
+    //public override void OnDisconnected(DisconnectCause cause)
+    //{
+    //    if(sectionView1.activeInHierarchy)
+    //        sectionView1.SetActive(false);
+    //    if (sectionView2.activeInHierarchy)
+    //        sectionView2.SetActive(false);
+
+    //    sectionView3.SetActive(true);
+
+    //    Debug.Log("Disconnected from Photon");
+    //}
+}
