@@ -33,6 +33,6 @@ public class MatchController : MonoBehaviourPunCallbacks {
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        PlayerMovement.RefreshInstance(ref localPlayer, PlayerPrefab);
+        //PlayerMovement.RefreshInstance(ref localPlayer, PlayerPrefab);
     }
 }

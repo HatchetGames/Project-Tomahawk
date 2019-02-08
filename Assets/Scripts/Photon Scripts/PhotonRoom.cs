@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 
     public static PhotonRoom room;
     private PhotonView PV;
+    public string prefabFolder;
+    public string prefabName;
 
     public bool isGameLoaded;
     public string currentScene;
@@ -23,9 +26,12 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     private bool readyToCount;
     private bool readyToStart;
     public float startingTime;
+    public float searchTime;
     private float lessThanMaxPlayers;
     private float atMaxPlayers;
     private float timeToStart;
+
+    public Text countdownText;
 
     private void Awake()
     {
@@ -64,9 +70,10 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
         PV = GetComponent<PhotonView>();
         readyToCount = false;
         readyToStart = false;
-        lessThanMaxPlayers = startingTime;
-        atMaxPlayers = 10;
+        lessThanMaxPlayers = searchTime;
+        atMaxPlayers = startingTime;
         timeToStart = startingTime;
+        //countdownText.gameObject.SetActive(true);
 	}
 	
 	// Update is called once per frame
@@ -84,16 +91,20 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
                 atMaxPlayers -= Time.deltaTime;
                 lessThanMaxPlayers = atMaxPlayers;
                 timeToStart = atMaxPlayers;
+                countdownText.text = ((int)timeToStart).ToString();
             }
             else if(readyToCount)
             {
                 lessThanMaxPlayers -= Time.deltaTime;
                 timeToStart = lessThanMaxPlayers;
             }
-            Debug.Log("Display time to start to the players: " + timeToStart);
+            //Debug.Log("Display time to start to the players: " + timeToStart);
 
-            if (timeToStart <= 0)
+            if (timeToStart <= 0 && readyToStart)
+            {
+                countdownText.text = "Starting Match...";
                 StartGame();
+            }
         }
 	}
 
@@ -103,9 +114,10 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
         Debug.Log("Joined " + PhotonNetwork.CurrentRoom.Name);
         photonPlayers = PhotonNetwork.PlayerList;
         playersInRoom = photonPlayers.Length;
-        myNumberInRoom = playersInRoom;
+        myNumberInRoom = playersInRoom - 1;
         PhotonNetwork.NickName = myNumberInRoom.ToString();
 
+        countdownText.gameObject.SetActive(true);
         //Display to screen if necessary
         Debug.Log("Displays players in room out of max players possible (" 
             + playersInRoom + ":" + MultiplayerSettings.settings.maxPlayers + ")");
@@ -159,11 +171,12 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 
     private void RestartTimer()
     {
-        lessThanMaxPlayers = startingTime;
+        lessThanMaxPlayers = searchTime;
         timeToStart = startingTime;
-        atMaxPlayers = 10;
+        atMaxPlayers = startingTime;
         readyToCount = false;
         readyToStart = false;
+        countdownText.text = "Waiting for Player...";
     }
 
     private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
@@ -191,6 +204,13 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     [PunRPC]
     private void RPC_CreatePlayer()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonTest"), transform.position, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(Path.Combine(prefabFolder, prefabName), transform.position, Quaternion.identity, 0);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        Debug.Log(otherPlayer.NickName + " has left the game");
+        playersInRoom--;
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class PhotonLobby : MonoBehaviourPunCallbacks {
 
     public static PhotonLobby lobby;
-    public PlayerMovement localPlayer;
+    //public PlayerMovement localPlayer;
     public GameObject quickMatchButton;
     public GameObject cancelMatchButton;
     //public GameObject sectionView1, sectionView2, sectionView3;
@@ -22,7 +22,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings();
-        Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
+        //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
     }
 
     public override void OnConnectedToMaster()
@@ -42,8 +42,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
             IsOpen = true,
             MaxPlayers = (byte)MultiplayerSettings.settings.maxPlayers
         };
-        //PhotonNetwork.CreateRoom("Room" + randomRoomName, roomOptions);
-        PhotonNetwork.CreateRoom("test", roomOptions);
+        PhotonNetwork.CreateRoom("Room" + randomRoomName, roomOptions);
+        //PhotonNetwork.CreateRoom("test", roomOptions);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -73,8 +73,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
     {
         quickMatchButton.SetActive(false);
         cancelMatchButton.SetActive(true);
-        //PhotonNetwork.JoinRandomRoom();
-        PhotonNetwork.JoinRoom("test");
+        PhotonNetwork.JoinRandomRoom();
+        //PhotonNetwork.JoinRoom("test");
     }
 
     public void OnCancelMatchButtonClicked()
