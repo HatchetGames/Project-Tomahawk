@@ -1037,7 +1037,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 569273238cde94f4c8bd4b4b0620989c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myNickname: 
+  myNickname: Player
   mySelectedWeapon: 0
   mySelectedPowerup: 0
   mySelectedSkin: 0

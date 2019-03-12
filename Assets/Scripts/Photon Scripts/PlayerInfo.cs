@@ -7,7 +7,7 @@ public class PlayerInfo : MonoBehaviour
 
     public static PlayerInfo PI;
 
-    public string myNickname;
+    private string myNickname = "Player";
     public int mySelectedWeapon;
     public int mySelectedPowerup;
     public int mySelectedSkin;
@@ -34,10 +34,13 @@ public class PlayerInfo : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if (PlayerPrefs.HasKey("MyNickname"))
+            myNickname = PlayerPrefs.GetString("MyNickname");
+        else
+            PlayerPrefs.SetString("MyNickname", myNickname);
+
         if (PlayerPrefs.HasKey("MyWeapon"))
-        {
             mySelectedWeapon = PlayerPrefs.GetInt("MyWeapon");
-        }
         else
         {
             mySelectedWeapon = 0;
@@ -45,13 +48,22 @@ public class PlayerInfo : MonoBehaviour
         }
 
         if (PlayerPrefs.HasKey("MyPowerup"))
-        {
-            mySelectedWeapon = PlayerPrefs.GetInt("MyPowerup");
-        }
+            mySelectedPowerup = PlayerPrefs.GetInt("MyPowerup");
         else
         {
             mySelectedPowerup = 0;
-            PlayerPrefs.SetInt("MyPowerup", mySelectedWeapon);
+            PlayerPrefs.SetInt("MyPowerup", mySelectedPowerup);
         }
+    }
+
+    public void SetNickname(string nickname)
+    {
+        myNickname = nickname;
+        PlayerPrefs.SetString("MyNickname", myNickname);
+    }
+
+    public string GetNickname()
+    {
+        return myNickname;
     }
 }

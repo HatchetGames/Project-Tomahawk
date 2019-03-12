@@ -85,12 +85,14 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
 
         string tempName = "Player" + myNumberInRoom;
 
-        if (PlayerInfo.PI.myNickname != "Player")
+        if (PlayerInfo.PI.GetNickname() != "Player")
         {
-            PhotonNetwork.NickName = PlayerInfo.PI.myNickname;
+            PhotonNetwork.NickName = PlayerInfo.PI.GetNickname();
         }
         else
+        {
             PhotonNetwork.NickName = tempName;
+        }
     }
 
     // Update is called once per frame
@@ -107,6 +109,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
             //{
             if (readyToStart)
             {
+                //Timer countdown tick
                 atMaxPlayers -= Time.deltaTime;
                 lessThanMaxPlayers = atMaxPlayers;
                 timeToStart = atMaxPlayers;
@@ -114,6 +117,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
             }
             else if (readyToCount)
             {
+                //Hidden waiting for player timer tick
                 lessThanMaxPlayers -= Time.deltaTime;
                 timeToStart = lessThanMaxPlayers;
             }
@@ -141,14 +145,9 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         playersInRoom = photonPlayers.Length;
         myNumberInRoom = playersInRoom - 1;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            masterClientName.text = PhotonNetwork.NickName;
-        }
-        else
-        {
-            clientName.text = PhotonNetwork.NickName;
-        }
+        //Update the nickname field of the newly joined player
+        photonView.RPC("RPC_UpdateNickname", RpcTarget.AllBuffered, 
+            PhotonNetwork.NickName, PhotonNetwork.IsMasterClient);
 
         countdownText.gameObject.SetActive(true);
         //Display to screen if necessary
@@ -163,12 +162,12 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         if (playersInRoom == MultiplayerSettings.settings.maxPlayers)
         {
             readyToStart = true;
+            notReadyButton.interactable = true;
             if (!PhotonNetwork.IsMasterClient)
                 return;
             Debug.Log("Closing " + PhotonNetwork.CurrentRoom.Name + " from OnJoinedRoom...");
             if (PhotonNetwork.CurrentRoom.IsOpen)
                 PhotonNetwork.CurrentRoom.IsOpen = false;
-            notReadyButton.interactable = true;
         }
     }
 
@@ -178,15 +177,6 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         Debug.Log("A new player has joined the room");
         photonPlayers = PhotonNetwork.PlayerList;
         playersInRoom++;
-
-        if(newPlayer.IsMasterClient)
-        {
-            masterClientName.text = newPlayer.NickName;
-        }
-        else
-        {
-            clientName.text = newPlayer.NickName;
-        }
 
         if (playersInRoom > 1)
         {
@@ -202,6 +192,20 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
             if (PhotonNetwork.CurrentRoom.IsOpen)
                 PhotonNetwork.CurrentRoom.IsOpen = false;
             notReadyButton.interactable = true;
+        }
+    }
+
+    //Updates the nickname field of the player who makes the call
+    [PunRPC]
+    private void RPC_UpdateNickname(string nickname, bool isMasterClient)
+    {
+        if (isMasterClient)
+        {
+            masterClientName.text = nickname;
+        }
+        else
+        {
+            clientName.text = nickname;
         }
     }
 
@@ -268,9 +272,17 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         base.OnPlayerLeftRoom(otherPlayer);
         Debug.Log(otherPlayer.NickName + " has left the game");
         playersInRoom--;
-        Debug.Log("Opening " + PhotonNetwork.CurrentRoom.Name + " from OnPlayerLeftRoom...");
-        PhotonNetwork.CurrentRoom.IsOpen = true;
-        RestartTimer();
+
+        if (currentScene == MultiplayerSettings.settings.menuScene)
+        {
+            Debug.Log("Opening " + PhotonNetwork.CurrentRoom.Name + " from OnPlayerLeftRoom...");
+            PhotonNetwork.CurrentRoom.IsOpen = true;
+            RestartTimer();
+        }
+        else if(currentScene == MultiplayerSettings.settings.matchScene)
+        {
+            GameSetup.GS.EndMatch();
+        }
     }
 
     public void OnReadyButtonClicked()

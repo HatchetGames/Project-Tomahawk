@@ -44,6 +44,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
             IsOpen = true,
             MaxPlayers = (byte)MultiplayerSettings.settings.maxPlayers
         };
+
         PhotonNetwork.CreateRoom("Room" + randomRoomName, roomOptions);
         //PhotonNetwork.CreateRoom("test", roomOptions);
     }

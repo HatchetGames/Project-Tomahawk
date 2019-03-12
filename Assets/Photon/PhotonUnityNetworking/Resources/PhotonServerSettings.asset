@@ -33,4 +33,5 @@ MonoBehaviour:
   - RPC_CreatePlayer
   - RPC_LoadedGameScene
   - RPC_Shooting
+  - RPC_UpdateNickname
   DisableAutoOpenWizard: 1

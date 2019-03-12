@@ -7,6 +7,7 @@ public class MultiplayerSettings : MonoBehaviour {
     public static MultiplayerSettings settings;
 
     public int maxPlayers;
+    public string homeScene;
     public string menuScene;
     public string matchScene;
     public string endgameScene;

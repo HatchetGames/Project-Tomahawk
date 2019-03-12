@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameSetup : MonoBehaviourPunCallbacks {
 
@@ -17,6 +18,7 @@ public class GameSetup : MonoBehaviourPunCallbacks {
     public float roundTimer;
 
     public GameObject endGameScreen;
+    public Text winnerOrLoserText;
 
     private void Start()
     {
@@ -66,6 +68,6 @@ public class GameSetup : MonoBehaviourPunCallbacks {
         }
         if (PhotonNetwork.IsConnected)
             PhotonNetwork.Disconnect();
-        SceneManager.LoadScene(MultiplayerSettings.settings.menuScene);
+        SceneManager.LoadScene(MultiplayerSettings.settings.homeScene);
     }
 }

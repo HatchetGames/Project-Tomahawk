@@ -12,6 +12,7 @@ public class MainMenuController : MonoBehaviour
     private void Start()
     {
         //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
+        playerNickname.text = PlayerInfo.PI.GetNickname();
     }
 
     //Changes the nickname of the player
@@ -28,7 +29,7 @@ public class MainMenuController : MonoBehaviour
             temp = "Player";
 
         playerNickname.text = temp;
-        PlayerInfo.PI.myNickname = temp;
+        PlayerInfo.PI.SetNickname(temp);
     }
 
     public void OnClickStartQuickMatch()

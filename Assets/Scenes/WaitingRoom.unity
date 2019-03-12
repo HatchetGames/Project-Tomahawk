@@ -700,7 +700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayers: 2
-  menuScene: MainMenu
+  homeScene: MainMenu
+  menuScene: WaitingRoom
   matchScene: Match
   endgameScene: Endgame
 --- !u!1 &826206348
@@ -1265,7 +1266,7 @@ MonoBehaviour:
   playerInGame: 0
   masterClientName: {fileID: 2105305886}
   clientName: {fileID: 609242772}
-  startingTime: 5
+  startingTime: 10
   searchTime: 20
   countdownText: {fileID: 1463752251}
   readyButton: {fileID: 1424196118}
