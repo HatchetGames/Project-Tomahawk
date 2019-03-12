@@ -16,6 +16,13 @@ public class GameSetup : MonoBehaviourPunCallbacks {
 
     public float roundTimer;
 
+    public GameObject endGameScreen;
+
+    private void Start()
+    {
+        endGameScreen.SetActive(false);
+    }
+
     private new void OnEnable()
     {
         if(GS == null)
@@ -31,7 +38,13 @@ public class GameSetup : MonoBehaviourPunCallbacks {
 
     public void EndMatch()
     {
-        //Take player(s) to post-match scene
+        //Take player(s) to post-match screen
+        endGameScreen.SetActive(true);
+    }
+
+    public void OnReturnButtonClicked()
+    {
+        DisconnectPlayer();
     }
 
     public void DisconnectPlayer()

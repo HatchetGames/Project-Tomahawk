@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MainMenuController : MonoBehaviour {
-
-    //public PlayerMovement localPlayer;
+public class MainMenuController : MonoBehaviour
+{
+    public Text playerNickname;
+    public int maxNameLength;
 
     private void Start()
     {
         //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
+    }
+
+    //Changes the nickname of the player
+    public void UpdateNicknameText(Text newName)
+    {
+        string temp = newName.text;
+
+        if (temp.Length > 0)
+        {
+            if (temp.Length > maxNameLength)
+                temp = temp.Substring(0, maxNameLength);
+        }
+        else
+            temp = "Player";
+
+        playerNickname.text = temp;
+        PlayerInfo.PI.myNickname = temp;
     }
 
     public void OnClickStartQuickMatch()

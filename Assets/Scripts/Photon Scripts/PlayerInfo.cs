@@ -7,6 +7,7 @@ public class PlayerInfo : MonoBehaviour
 
     public static PlayerInfo PI;
 
+    public string myNickname;
     public int mySelectedWeapon;
     public int mySelectedPowerup;
     public int mySelectedSkin;

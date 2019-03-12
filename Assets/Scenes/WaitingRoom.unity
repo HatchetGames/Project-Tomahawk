@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 609242773}
   - component: {fileID: 609242772}
   m_Layer: 5
-  m_Name: secondPlayerName
+  m_Name: clientName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -574,7 +574,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: secondPlayer
+  m_Text: client
 --- !u!222 &609242773
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1263,7 +1263,9 @@ MonoBehaviour:
   playersInRoom: 0
   myNumberInRoom: 0
   playerInGame: 0
-  startingTime: 15
+  masterClientName: {fileID: 2105305886}
+  clientName: {fileID: 609242772}
+  startingTime: 5
   searchTime: 20
   countdownText: {fileID: 1463752251}
   readyButton: {fileID: 1424196118}
@@ -2625,7 +2627,7 @@ GameObject:
   - component: {fileID: 2105305887}
   - component: {fileID: 2105305886}
   m_Layer: 5
-  m_Name: firstPlayerName
+  m_Name: masterClientName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2681,7 +2683,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: firstPlayer
+  m_Text: master
 --- !u!222 &2105305887
 CanvasRenderer:
   m_ObjectHideFlags: 0
