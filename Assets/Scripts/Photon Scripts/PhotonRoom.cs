@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 
     public static PhotonRoom room;
-    private PhotonView PV;
+    //private PhotonView PV;
     public string prefabFolder;
     public string prefabName;
 
@@ -32,6 +32,8 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     private float timeToStart;
 
     public Text countdownText;
+    public Button readyButton;
+    public Button notReadyButton;
 
     private void Awake()
     {
@@ -67,13 +69,16 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     // Use this for initialization
     void Start ()
     {
-        PV = GetComponent<PhotonView>();
+        //PV = GetComponent<PhotonView>();
         readyToCount = false;
         readyToStart = false;
         lessThanMaxPlayers = searchTime;
         atMaxPlayers = startingTime;
         timeToStart = startingTime;
         //countdownText.gameObject.SetActive(true);
+        readyButton.gameObject.SetActive(false);
+        notReadyButton.gameObject.SetActive(true);
+        notReadyButton.interactable = false;
 	}
 	
 	// Update is called once per frame
@@ -86,19 +91,27 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
 
         if(!isGameLoaded)
         {
-            if(readyToStart)
-            {
-                atMaxPlayers -= Time.deltaTime;
-                lessThanMaxPlayers = atMaxPlayers;
-                timeToStart = atMaxPlayers;
-                countdownText.text = ((int)timeToStart).ToString();
-            }
-            else if(readyToCount)
-            {
-                lessThanMaxPlayers -= Time.deltaTime;
-                timeToStart = lessThanMaxPlayers;
-            }
-            //Debug.Log("Display time to start to the players: " + timeToStart);
+            //if (!readyButton.IsActive())
+            //{
+                if (readyToStart)
+                {
+                    atMaxPlayers -= Time.deltaTime;
+                    lessThanMaxPlayers = atMaxPlayers;
+                    timeToStart = atMaxPlayers;
+                    countdownText.text = ((int)timeToStart).ToString();
+                }
+                else if (readyToCount)
+                {
+                    lessThanMaxPlayers -= Time.deltaTime;
+                    timeToStart = lessThanMaxPlayers;
+                }
+                //Debug.Log("Display time to start to the players: " + timeToStart);
+            //}
+            //else
+            //{
+            //    timeToStart = 0;
+            //    readyToStart = true;
+            //}
 
             if (timeToStart <= 0 && readyToStart)
             {
@@ -134,6 +147,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
                 return;
             Debug.Log("Closing " + PhotonNetwork.CurrentRoom.Name + " from OnJoinedRoom...");
             PhotonNetwork.CurrentRoom.IsOpen = false;
+            notReadyButton.interactable = true;
         }
     }
 
@@ -156,6 +170,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
                 return;
             Debug.Log("Closing " + PhotonNetwork.CurrentRoom.Name + " from OnPlayerEnteredRoom ...");
             PhotonNetwork.CurrentRoom.IsOpen = false;
+            notReadyButton.interactable = true;
         }
     }
 
@@ -164,8 +179,14 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
         isGameLoaded = true;
         if (!PhotonNetwork.IsMasterClient)
             return;
-        Debug.Log("Closing " + PhotonNetwork.CurrentRoom.Name + " from StartGame ...");
-        PhotonNetwork.CurrentRoom.IsOpen = false;
+
+        if (PhotonNetwork.CurrentRoom.IsOpen)
+        {
+            Debug.Log("Closing " + PhotonNetwork.CurrentRoom.Name + " from StartGame ...");
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            //notReadyButton.interactable = true;
+        }
+
         PhotonNetwork.LoadLevel(MultiplayerSettings.settings.matchScene);
     }
 
@@ -182,12 +203,13 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
     {
         currentScene = scene.name;
-        
+
         if(currentScene == MultiplayerSettings.settings.matchScene)
         {
             isGameLoaded = true;
-
-            PV.RPC("RPC_LoadedGameScene", RpcTarget.MasterClient);
+            //Debug.Log(photonView.name);
+            //PhotonNetwork.Instantiate(Path.Combine(prefabFolder, prefabName), transform.position, Quaternion.identity, 0);
+            photonView.RPC("RPC_LoadedGameScene", RpcTarget.MasterClient);
         }
     }
 
@@ -195,15 +217,18 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
     private void RPC_LoadedGameScene()
     {
         playerInGame++;
-        if(playerInGame == PhotonNetwork.PlayerList.Length)
+        if (playerInGame == PhotonNetwork.PlayerList.Length)
         {
-            PV.RPC("RPC_CreatePlayer", RpcTarget.All);
+            //playerInGame++;
+            //Debug.Log("RPC_LoadedGameScene calling RPC_CreatePlayer...");
+            photonView.RPC("RPC_CreatePlayer", RpcTarget.All);
         }
     }
 
     [PunRPC]
     private void RPC_CreatePlayer()
     {
+        //Debug.Log("RPC_CreatePlayer creating Player...");
         PhotonNetwork.Instantiate(Path.Combine(prefabFolder, prefabName), transform.position, Quaternion.identity, 0);
     }
 
@@ -212,5 +237,28 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks {
         base.OnPlayerLeftRoom(otherPlayer);
         Debug.Log(otherPlayer.NickName + " has left the game");
         playersInRoom--;
+        Debug.Log("Opening " + PhotonNetwork.CurrentRoom.Name + " from OnPlayerLeftRoom...");
+        PhotonNetwork.CurrentRoom.IsOpen = true;
+        RestartTimer();
+    }
+
+    public void OnReadyButtonClicked()
+    {
+        //Player stops being ready
+        readyButton.gameObject.SetActive(false);
+        notReadyButton.gameObject.SetActive(true);
+        readyButton.interactable = false;
+        notReadyButton.interactable = true;
+        //PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void OnNotReadyButtonClicked()
+    {
+        //Player readies up
+        notReadyButton.gameObject.SetActive(false);
+        readyButton.gameObject.SetActive(true);
+        notReadyButton.interactable = false;
+        readyButton.interactable = true;
+        //PhotonNetwork.LeaveRoom();
     }
 }

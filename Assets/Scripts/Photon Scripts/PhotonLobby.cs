@@ -9,14 +9,16 @@ using UnityEngine.SceneManagement;
 public class PhotonLobby : MonoBehaviourPunCallbacks {
 
     public static PhotonLobby lobby;
-    //public PlayerMovement localPlayer;
-    public GameObject quickMatchButton;
-    public GameObject cancelMatchButton;
-    //public GameObject sectionView1, sectionView2, sectionView3;
 
     private void Awake()
     {
+        //if (lobby == null)
+        //    lobby = this;
+        //else if (lobby != this)
+        //    Destroy(gameObject);
+        //DontDestroyOnLoad(gameObject);
         lobby = this;
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     private void Start()
@@ -29,8 +31,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
     {
         //PhotonNetwork.JoinLobby(TypedLobby.Default);
         Debug.Log("We are connected to master");
-        PhotonNetwork.AutomaticallySyncScene = true;
-        quickMatchButton.SetActive(true);
+
+        PhotonNetwork.JoinRandomRoom();
     }
 
     private void CreateRoom()
@@ -69,45 +71,11 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
         CreateRoom();
     }
 
-    public void OnQuickMatchButtonClicked()
+    public override void OnJoinedLobby()
     {
-        quickMatchButton.SetActive(false);
-        cancelMatchButton.SetActive(true);
-        PhotonNetwork.JoinRandomRoom();
-        //PhotonNetwork.JoinRoom("test");
+        Debug.Log("On Joined Lobby");
+        //PhotonNetwork.JoinRandomRoom();
     }
-
-    public void OnCancelMatchButtonClicked()
-    {
-        cancelMatchButton.SetActive(false);
-        quickMatchButton.SetActive(true);
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public void OnClickStartSurvival()
-    {
-        //Destroy(localPlayer);
-        SceneManager.LoadScene("WaitingRoomSurvival");
-    }
-
-    public void OnClickOpenShop()
-    {
-        //Destroy(localPlayer);
-        SceneManager.LoadScene("Shop");
-    }
-
-    public void OnClickOpenSettings()
-    {
-        //Destroy(localPlayer);
-        SceneManager.LoadScene("Settings");
-    }
-
-    //public override void OnJoinedLobby()
-    //{
-    //    sectionView1.SetActive(false);
-    //    sectionView2.SetActive(true);
-    //    Debug.Log("On Joined Lobby");
-    //}
 
     //public override void OnDisconnected(DisconnectCause cause)
     //{

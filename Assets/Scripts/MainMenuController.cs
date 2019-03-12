@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour {
 
-    public PlayerMovement localPlayer;
+    //public PlayerMovement localPlayer;
 
     private void Start()
     {
-        Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
+        //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
     }
 
     public void OnClickStartQuickMatch()

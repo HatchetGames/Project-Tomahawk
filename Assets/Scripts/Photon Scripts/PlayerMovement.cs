@@ -6,7 +6,8 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerMovement : MonoBehaviourPun
 {
-    private CharacterController myCC;
+    //private CharacterController myCC;
+    private Transform playerTransform;
     public float moveSpeed;
     private Vector3 selfPos;
     public GameObject playerCam;
@@ -14,7 +15,8 @@ public class PlayerMovement : MonoBehaviourPun
 
     private void Start()
     {
-        myCC = GetComponent<CharacterController>();
+        //myCC = GetComponent<CharacterController>();
+        playerTransform = transform;
         if (photonView.IsMine)
         {
             sceneCam = GameObject.Find("Main Camera");
@@ -39,7 +41,7 @@ public class PlayerMovement : MonoBehaviourPun
     {
         float hInput = CrossPlatformInputManager.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         float vInput = CrossPlatformInputManager.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
-        //transform.Translate(hInput, vInput, 0.0f);
-        myCC.Move(new Vector3(hInput, vInput));
+        playerTransform.Translate(hInput, vInput, 0.0f);
+        //myCC.Move(new Vector3(hInput, vInput));
     }
 }

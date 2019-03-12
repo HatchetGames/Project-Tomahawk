@@ -28,12 +28,9 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   RpcList:
-  - DestroySpaceship
-  - Fire
-  - RespawnSpaceship
-  - RPC_CreatePlayer
-  - RPC_LoadedGameScene
   - RPC_AddPowerup
   - RPC_AddWeapon
+  - RPC_CreatePlayer
+  - RPC_LoadedGameScene
   - RPC_Shooting
   DisableAutoOpenWizard: 1

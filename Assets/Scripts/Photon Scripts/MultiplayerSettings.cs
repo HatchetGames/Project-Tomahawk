@@ -9,6 +9,7 @@ public class MultiplayerSettings : MonoBehaviour {
     public int maxPlayers;
     public string menuScene;
     public string matchScene;
+    public string endgameScene;
 
     private void Awake()
     {

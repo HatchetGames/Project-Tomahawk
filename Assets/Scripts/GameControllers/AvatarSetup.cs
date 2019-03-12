@@ -19,8 +19,8 @@ public class AvatarSetup : MonoBehaviourPun {
 	void Start () {
         if(photonView.IsMine)
         {
-            photonView.RPC("RPC_AddWeapon", RpcTarget.AllBuffered, PlayerInfo.PI.mySelectedWeapon);
-            photonView.RPC("RPC_AddPowerup", RpcTarget.AllBuffered, PlayerInfo.PI.mySelectedPowerup);
+            //photonView.RPC("RPC_AddWeapon", RpcTarget.AllBuffered, PlayerInfo.PI.mySelectedWeapon);
+            //photonView.RPC("RPC_AddPowerup", RpcTarget.AllBuffered, PlayerInfo.PI.mySelectedPowerup);
         }
         else
         {

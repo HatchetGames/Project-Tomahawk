@@ -9,18 +9,24 @@ public class AvatarCombat : MonoBehaviourPun
 {
 
     private AvatarSetup avatarSetup;
-    private Text health;
+
+    //public Text health;
+    //public Text clientHealth;
+    public GameObject bulletSpawnPoint;
+    public float waitTime;
+
+    public float timeCounter = 0.0f;
 
     // Use this for initialization
     void Start()
     {
         avatarSetup = GetComponent<AvatarSetup>();
-        health = GameObject.Find("healthText").GetComponent<Text>();
+        //hostHealth = GameObject.Find("healthText").GetComponent<Text>();
 
-        if(health == null)
-        {
-            Debug.LogError("Cant find heath object");
-        }
+        //if(health == null)
+        //{
+        //    Debug.LogError("Cant find health object");
+        //}
     }
 
     // Update is called once per frame
@@ -29,28 +35,34 @@ public class AvatarCombat : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
+        //float weaponX = 0.0f;
+        //float weaponY = 0.0f;
         Vector2 direction;
+        float horizontal = CrossPlatformInputManager.GetAxis("horizontal");
+        float vertical = CrossPlatformInputManager.GetAxis("vertical");
 
         direction = new Vector2(
-            CrossPlatformInputManager.GetAxis("horizontal"),
-            CrossPlatformInputManager.GetAxis("vertical")
+            horizontal,
+            vertical
             );
 
-        if(direction.magnitude > 1)
+        if (direction.x != 0 || direction.y != 0)
         {
-            direction.Normalize();
+            //transform.Rotate(new Vector3(0f, 0f, horizontal));
+
+            if (direction.magnitude > 1)
+            {
+                direction.Normalize();
+            }
+
+            //photonView.RPC("RPC_Shooting", RpcTarget.All, direction);
+            Shoot(direction);
         }
+    }
 
+    void Shoot(Vector2 direction)
+    {
         photonView.RPC("RPC_Shooting", RpcTarget.All, direction);
-
-        //if (CrossPlatformInputManager.GetAxis("vertical") > 0)
-        //{
-        //    photonView.RPC("RPC_Shooting", RpcTarget.All, Vector2.up);
-        //}
-        //else if (CrossPlatformInputManager.GetAxis("vertical") < 0)
-        //{
-        //    photonView.RPC("RPC_Shooting", RpcTarget.All, Vector2.down);
-        //}
     }
 
     [PunRPC]
@@ -70,7 +82,7 @@ public class AvatarCombat : MonoBehaviourPun
                     if (photonView.IsMine)
                     {
                         hit.transform.gameObject.GetComponent<AvatarSetup>().playerHealth -= avatarSetup.playerDamage;
-                        health.text = hit.transform.gameObject.GetComponent<AvatarSetup>().playerHealth.ToString();
+                        //health.text = hit.transform.gameObject.GetComponent<AvatarSetup>().playerHealth.ToString();
                     }
                 }
             }

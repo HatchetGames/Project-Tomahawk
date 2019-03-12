@@ -8,6 +8,8 @@ public class PhotonPlayer : MonoBehaviour {
 
     private PhotonView PV;
     public GameObject playerAvatar;
+    public string prefabFolder;
+    public string prefabName;
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +17,7 @@ public class PhotonPlayer : MonoBehaviour {
 
         if(PV.IsMine)
         {
-            playerAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerAvatar"), 
+            playerAvatar = PhotonNetwork.Instantiate(Path.Combine(prefabFolder, prefabName), 
                 GameSetup.GS.spawnPoints[PhotonRoom.room.myNumberInRoom].position, 
                 GameSetup.GS.spawnPoints[PhotonRoom.room.myNumberInRoom].rotation, 0);
         }

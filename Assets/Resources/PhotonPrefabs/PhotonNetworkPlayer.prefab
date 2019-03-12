@@ -75,6 +75,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAvatar: {fileID: 0}
+  prefabFolder: PhotonPrefabs
+  prefabName: PlayerAvatar
 --- !u!212 &212293611613709336
 SpriteRenderer:
   m_ObjectHideFlags: 1
