@@ -304,4 +304,21 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         readyButton.interactable = true;
         //PhotonNetwork.LeaveRoom();
     }
+
+    public void OnReturnButtonClicked()
+    {
+        StartCoroutine(DisconnectAndLoad());
+    }
+
+    IEnumerator DisconnectAndLoad()
+    {
+        PhotonNetwork.LeaveRoom();
+        while (PhotonNetwork.InRoom)
+        {
+            yield return null;
+        }
+        if (PhotonNetwork.IsConnected)
+            PhotonNetwork.Disconnect();
+        SceneManager.LoadScene(MultiplayerSettings.settings.homeScene);
+    }
 }
