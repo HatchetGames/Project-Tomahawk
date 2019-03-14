@@ -5,28 +5,42 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class AvatarCombat : MonoBehaviourPun
+public class AvatarCombat : MonoBehaviourPunCallbacks, IPunObservable
 {
 
     private AvatarSetup avatarSetup;
 
-    //public Text health;
-    //public Text clientHealth;
     public GameObject bulletSpawnPoint;
-    public float waitTime;
+    public GameObject bullet;
+    public float fireRate = 0.25f;
+    public int magCapacity = 5;
+    public float reloadTime = 1.0f;
 
     public float timeCounter = 0.0f;
+
+    private GameObject bulletSpawned;
+    private bool isReloading;
+    private float timeToReload;
+    private int curAmmoCount;
+
+    private float timeToFire;
+    private bool canAttack;
+    private bool isAttacking;
 
     // Use this for initialization
     void Start()
     {
-        avatarSetup = GetComponent<AvatarSetup>();
-        //hostHealth = GameObject.Find("healthText").GetComponent<Text>();
-
-        //if(health == null)
-        //{
-        //    Debug.LogError("Cant find health object");
-        //}
+        if (photonView.IsMine)
+        {
+            avatarSetup = GetComponent<AvatarSetup>();
+            bulletSpawnPoint = GameObject.FindGameObjectWithTag("BulletSpawnPoint");
+            isReloading = false;
+            timeToReload = reloadTime;
+            curAmmoCount = magCapacity;
+            timeToFire = fireRate;
+            canAttack = true;
+            isAttacking = false;
+        }
     }
 
     // Update is called once per frame
@@ -35,62 +49,104 @@ public class AvatarCombat : MonoBehaviourPun
         if (!photonView.IsMine)
             return;
 
-        //float weaponX = 0.0f;
-        //float weaponY = 0.0f;
         Vector2 direction;
         float horizontal = CrossPlatformInputManager.GetAxis("horizontal");
         float vertical = CrossPlatformInputManager.GetAxis("vertical");
 
-        direction = new Vector2(
-            horizontal,
-            vertical
-            );
+        direction = new Vector2(horizontal, vertical);
+        Rotate(direction);
 
-        if (direction.x != 0 || direction.y != 0)
+        //Reloading time
+        if(isReloading && timeToReload > 0.0f)
         {
-            //transform.Rotate(new Vector3(0f, 0f, horizontal));
-
-            if (direction.magnitude > 1)
-            {
-                direction.Normalize();
-            }
-
-            //photonView.RPC("RPC_Shooting", RpcTarget.All, direction);
-            Shoot(direction);
+            timeToReload -= Time.deltaTime;
         }
-    }
 
-    void Shoot(Vector2 direction)
-    {
-        photonView.RPC("RPC_Shooting", RpcTarget.All, direction);
-    }
-
-    [PunRPC]
-    void RPC_Shooting(Vector2 direction)
-    {
-        RaycastHit hit;
-
-        if (direction.x != 0 || direction.y != 0)
+        if(timeToReload <= 0.0f)
         {
-            if (Physics.Raycast(transform.position, transform.TransformDirection(direction), out hit, 1000))
-            {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * hit.distance, Color.red);
-                Debug.Log("We Hit" + hit.transform.name, hit.transform);
+            isReloading = false;
+            timeToReload = reloadTime;
+            curAmmoCount = magCapacity;
+        }
 
-                if (hit.transform.tag == "Avatar")
-                {
-                    if (photonView.IsMine)
-                    {
-                        hit.transform.gameObject.GetComponent<AvatarSetup>().playerHealth -= avatarSetup.playerDamage;
-                        //health.text = hit.transform.gameObject.GetComponent<AvatarSetup>().playerHealth.ToString();
-                    }
-                }
+        //Fire rate time
+        if (!canAttack && timeToFire > 0.0f)
+            timeToFire -= Time.deltaTime;
+
+        if(timeToFire <= 0.0f)
+        {
+            canAttack = true;
+            timeToFire = fireRate;
+        }
+
+        if (direction.x != 0.0f || direction.y != 0.0f)
+        {
+            isAttacking = true;
+
+            if (curAmmoCount > 0)
+            {
+                //Shoot
+                if (canAttack)
+                    Shoot();
             }
             else
             {
-                Debug.DrawRay(transform.position, transform.TransformDirection(direction) * 1000, Color.white);
-                Debug.Log("Miss!");
+                //Out of ammo
+                if (isReloading == false)
+                    isReloading = true;
+                timeToReload = reloadTime;
             }
+        }
+        else
+            isAttacking = false;
+    }
+
+    void Rotate(Vector2 direction)
+    {
+        //if (direction.x == 0f && direction.y == 0f)
+        //{
+        //    Vector3 curRot = transform.eulerAngles;
+        //    Vector3 homeRot;
+
+        //    if (curRot.z > 180f)
+        //    {
+        //        homeRot = new Vector3(0f, 0f, 359.999f);
+        //    }
+        //    else
+        //        homeRot = Vector3.zero;
+
+        //    transform.eulerAngles = Vector3.Slerp(curRot, homeRot, Time.deltaTime * 2);
+        //}
+        //else
+        if(direction.x != 0f || direction.y != 0f)
+            transform.eulerAngles = new Vector3(0f, 0f, -(Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg));
+    }
+
+    void Shoot()
+    {
+        --curAmmoCount;
+        canAttack = false;
+        photonView.RPC("RPC_Shooting", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RPC_Shooting()
+    {
+        /*bulletSpawned = */PhotonNetwork.Instantiate("Projectiles/Bullet", bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation, 0);
+        //bulletSpawned.transform.parent = bulletSpawnPoint.transform;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if(stream.IsWriting)
+        {
+            stream.SendNext(isAttacking);
+            stream.SendNext(avatarSetup.GetHealth());
+        }
+        else
+        {
+            this.isAttacking = (bool)stream.ReceiveNext();
+            avatarSetup.SetHealth((int)stream.ReceiveNext());
         }
     }
 }

@@ -10,6 +10,8 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 
     public static PhotonLobby lobby;
 
+    private string gameVersion = "1";
+
     private void Awake()
     {
         //if (lobby == null)
@@ -23,6 +25,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks {
 
     private void Start()
     {
+        PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
         //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
     }

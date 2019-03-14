@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bccc192753a304cb524a0a08ef3e0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quickMatchButton: {fileID: 1248481678}
   playerNickname: {fileID: 990763362}
   maxNameLength: 13
 --- !u!4 &157955831
@@ -742,7 +743,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Player
+  m_Text: 
 --- !u!222 &990763363
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -999,10 +1000,10 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Name:'
+  m_Text: Please Give Yourself a Name
 --- !u!222 &1356100896
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1037,11 +1038,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 569273238cde94f4c8bd4b4b0620989c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myNickname: Player
   mySelectedWeapon: 0
   mySelectedPowerup: 0
   mySelectedSkin: 0
-  allWeapons: []
+  allWeapons:
+  - {fileID: 0}
   allPowerups: []
 --- !u!4 &1419234183
 Transform:

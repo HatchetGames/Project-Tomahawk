@@ -192,7 +192,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpawnPoint: {fileID: 0}
-  waitTime: 0.4
+  fireRate: 0.25
+  magCapacity: 5
+  reloadTime: 2
+  damage: 20
   timeCounter: 0
 --- !u!114 &114089829706301894
 MonoBehaviour:
@@ -242,8 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponValue: 0
   powerupValue: 0
-  myWeapon: {fileID: 0}
-  myPowerup: {fileID: 0}
+  weaponPos: {fileID: 0}
   playerHealth: 100
   playerDamage: 20
 --- !u!114 &114536578940648430
@@ -259,6 +261,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 4
   playerCam: {fileID: 1709864296534022}
+  legAnimator: {fileID: 0}
+  bodyObject: {fileID: 0}
+  bodyAnimator: {fileID: 0}
+  leftHandObject: {fileID: 0}
+  rightHandObject: {fileID: 0}
 --- !u!212 &212401409234604226
 SpriteRenderer:
   m_ObjectHideFlags: 1

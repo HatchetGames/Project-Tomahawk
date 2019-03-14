@@ -15,14 +15,21 @@ public class GameSetup : MonoBehaviourPunCallbacks {
     public int maxRounds = 3;
     public int currentRound;
 
-    public float roundTimer;
-
     public GameObject endGameScreen;
     public Text winnerOrLoserText;
+
+    private Text timerText;
+    public float roundDuration = 60;
+    private float timeLeft = 0;
+
+    private bool roundInProgress = false;
 
     private void Start()
     {
         endGameScreen.SetActive(false);
+        timerText = GameObject.FindGameObjectWithTag("RoundTimer").GetComponent<Text>();
+        timeLeft = roundDuration;
+        roundInProgress = true;
     }
 
     private new void OnEnable()
@@ -33,9 +40,36 @@ public class GameSetup : MonoBehaviourPunCallbacks {
         }
     }
 
+    private void Update()
+    {
+        if(roundInProgress && timeLeft > 0.0f)
+        {
+            timeLeft -= Time.deltaTime;
+            timerText.text = ((int)timeLeft).ToString();
+        }
+        
+        if(timeLeft <= 0.0f)
+        {
+            roundInProgress = false;
+            timeLeft = roundDuration;
+            RestartRound();
+        }
+
+        if (currentRound == maxRounds)
+            EndMatch();
+    }
+
     public void RestartRound()
     {
         //Respawn players, restart timer
+        if (PhotonNetwork.IsMasterClient)
+            transform.position = spawnPoints[0].position;
+        else
+            transform.position = spawnPoints[1].position;
+
+        roundInProgress = true;
+        timeLeft = roundDuration;
+        ++currentRound;
     }
 
     public void EndMatch()

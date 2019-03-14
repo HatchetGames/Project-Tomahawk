@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
+    public Button quickMatchButton;
     public Text playerNickname;
     public int maxNameLength;
 
@@ -13,6 +14,7 @@ public class MainMenuController : MonoBehaviour
     {
         //Instantiate(localPlayer, Vector3.zero, Quaternion.identity);
         playerNickname.text = PlayerInfo.PI.GetNickname();
+        quickMatchButton.interactable = false;
     }
 
     //Changes the nickname of the player
@@ -30,6 +32,8 @@ public class MainMenuController : MonoBehaviour
 
         playerNickname.text = temp;
         PlayerInfo.PI.SetNickname(temp);
+        if (!quickMatchButton.interactable)
+            quickMatchButton.interactable = true;
     }
 
     public void OnClickStartQuickMatch()

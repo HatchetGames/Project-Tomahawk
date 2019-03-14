@@ -699,7 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f642f126a55d84f9d46ad126452980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayers: 2
+  maxPlayers: 1
   homeScene: MainMenu
   menuScene: WaitingRoom
   matchScene: Match
@@ -1389,7 +1389,7 @@ MonoBehaviour:
   playerInGame: 0
   masterClientName: {fileID: 2105305886}
   clientName: {fileID: 609242772}
-  startingTime: 10
+  startingTime: 4
   searchTime: 20
   countdownText: {fileID: 1463752251}
   readyButton: {fileID: 1424196118}
