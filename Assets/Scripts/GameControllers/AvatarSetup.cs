@@ -19,6 +19,7 @@ public class AvatarSetup : MonoBehaviourPun {
     private int maxHealth = 100;
 
     private Image HPBar;
+    public int numDeaths;
 
 	// Use this for initialization
 	void Start () {
@@ -59,11 +60,7 @@ public class AvatarSetup : MonoBehaviourPun {
 
         if(playerHealth <= 0)
         {
-
-        }
-        else
-        {
-
+            PlayerDie();
         }
     }
 
@@ -77,6 +74,13 @@ public class AvatarSetup : MonoBehaviourPun {
             HPBar.color = Color.red;
 
         HPBar.fillAmount = percentLeft;
+    }
+
+    void PlayerDie()
+    {
+        numDeaths++;
+
+        GameSetup.GS.OnPlayerDeath(PhotonNetwork.IsMasterClient);
     }
 
     [PunRPC]

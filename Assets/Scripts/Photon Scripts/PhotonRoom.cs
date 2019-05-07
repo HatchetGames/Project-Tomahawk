@@ -34,7 +34,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
     private float atMaxPlayers;
     private float timeToStart;
 
-    public Text countdownText;
+    public Text countdownText = null;
     public Button readyButton;
     public Button notReadyButton;
 
@@ -107,7 +107,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         {
             //if (!readyButton.IsActive())
             //{
-            if (readyToStart)
+            if (readyToStart && !countdownText.IsDestroyed())
             {
                 //Timer countdown tick
                 atMaxPlayers -= Time.deltaTime;
@@ -281,7 +281,7 @@ public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
         }
         else if(currentScene == MultiplayerSettings.settings.matchScene)
         {
-            GameSetup.GS.EndMatch();
+            GameSetup.GS.EndMatch(PhotonNetwork.IsMasterClient);
         }
     }
 

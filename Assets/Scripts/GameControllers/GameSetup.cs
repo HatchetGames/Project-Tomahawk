@@ -23,6 +23,9 @@ public class GameSetup : MonoBehaviourPunCallbacks {
     private float timeLeft = 0;
 
     private bool roundInProgress = false;
+    private bool isMasterWinner;
+    private int masterWins;
+    private int clientWins;
 
     private void Start()
     {
@@ -52,11 +55,9 @@ public class GameSetup : MonoBehaviourPunCallbacks {
         {
             roundInProgress = false;
             timeLeft = roundDuration;
+
             RestartRound();
         }
-
-        if (currentRound == maxRounds)
-            EndMatch();
     }
 
     public void RestartRound()
@@ -65,15 +66,46 @@ public class GameSetup : MonoBehaviourPunCallbacks {
         if (PhotonNetwork.IsMasterClient)
             transform.position = spawnPoints[0].position;
         else
+        {
             transform.position = spawnPoints[1].position;
+            transform.rotation = Quaternion.Inverse(transform.rotation);
+        }
 
         roundInProgress = true;
         timeLeft = roundDuration;
         ++currentRound;
     }
 
-    public void EndMatch()
+    public void OnPlayerDeath(bool isMaster)
     {
+        if(isMaster)
+        {
+            clientWins++;
+        }
+        else
+        {
+            masterWins++;
+        }
+
+        
+        if (clientWins >= 2)
+        {
+            EndMatch(false);
+        }
+        else if (masterWins >= 2)
+            EndMatch(true);
+        else
+            RestartRound();
+    }
+
+    public void EndMatch(bool deadPlayerIsMaster)
+    {
+        if (deadPlayerIsMaster)
+        {
+            isMasterWinner = false;
+        }
+        else
+            isMasterWinner = true;
         //Take player(s) to post-match screen
         endGameScreen.SetActive(true);
     }

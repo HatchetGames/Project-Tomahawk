@@ -699,7 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f642f126a55d84f9d46ad126452980, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlayers: 1
+  maxPlayers: 2
   homeScene: MainMenu
   menuScene: WaitingRoom
   matchScene: Match

@@ -668,6 +668,7 @@ MonoBehaviour:
   weaponPos: {fileID: 1520925838423220}
   weaponPrefabFolder: Weapons
   weaponPrefab: Pistol
+  numDeaths: 0
 --- !u!114 &114282801842822304
 MonoBehaviour:
   m_ObjectHideFlags: 1
